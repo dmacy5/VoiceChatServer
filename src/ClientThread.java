@@ -43,6 +43,10 @@ public class ClientThread extends Thread{
         }
         catch(IOException e)
         {
+            for(int i = 0; i < threads.length; i++)
+                if(threads[i] == this) {
+                    threads[i] = null;
+                }
             e.printStackTrace();
         }
     }
