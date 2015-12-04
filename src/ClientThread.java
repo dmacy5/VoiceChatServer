@@ -38,11 +38,15 @@ public class ClientThread extends Thread{
 
                 for(int i = 0; i < threads.length; i++)
                     if(threads[i] != null && threads[i] != this)
-                        output.write(data, 0, numOfBytesRead);
+                        threads[i].output.write(data, 0, numOfBytesRead);
             }
         }
         catch(IOException e)
         {
+            for(int i = 0; i < threads.length; i++)
+                if(threads[i] == this) {
+                    threads[i] = null;
+                }
             e.printStackTrace();
         }
     }
