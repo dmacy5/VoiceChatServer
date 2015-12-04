@@ -8,7 +8,7 @@ public class VoiceChatServer{
 
     public static void main(String[] args){
         try {
-            ServerSocket listener = new ServerSocket(7889);
+            ServerSocket listener = new ServerSocket(9999);
 
             while (true) {
                 new ClientThread(listener.accept(), threads).start();
