@@ -11,6 +11,7 @@ public class ClientThread extends Thread{
     private DataInputStream input;
     private DataOutputStream output;
     private ClientThread[] threads;
+    public static boolean keepGoing;
 
     public ClientThread(Socket socket, ClientThread[] t){
         this.socket = socket;
@@ -30,6 +31,11 @@ public class ClientThread extends Thread{
             byte[] data = new byte[1024];
             int numOfBytesRead;
 
+            for(int i = 0; i < threads.length; i++)
+                if(threads[i] == this) {
+                    int ix = i+1;
+                    System.out.println("User " + ix + " connected.");
+                }
 
             while(true)
             {
@@ -38,15 +44,6 @@ public class ClientThread extends Thread{
                 for(int i = 0; i < threads.length; i++)
                     if(threads[i] != null && threads[i] != this)
                         threads[i].output.write(data, 0, numOfBytesRead);
-
-                if(System.in.available() != 0) {
-                    for(ClientThread t: threads) {
-                        if(t != null)
-                            t.shutdown();
-                    }
-                    socket.close();
-                    System.exit(0);
-                }
             }
 
         }
@@ -66,7 +63,7 @@ public class ClientThread extends Thread{
         try {
             input.close();
             output.close();
-        } catch(IOException e){};
+        } catch(IOException e){}
     }
 
 }
