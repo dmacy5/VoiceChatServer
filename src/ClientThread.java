@@ -1,8 +1,6 @@
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
@@ -32,6 +30,7 @@ public class ClientThread extends Thread{
             byte[] data = new byte[1024];
             int numOfBytesRead;
 
+
             while(true)
             {
                 numOfBytesRead = input.read(data, 0, 1024);
@@ -39,16 +38,35 @@ public class ClientThread extends Thread{
                 for(int i = 0; i < threads.length; i++)
                     if(threads[i] != null && threads[i] != this)
                         threads[i].output.write(data, 0, numOfBytesRead);
+
+                if(System.in.available() != 0) {
+                    for(ClientThread t: threads) {
+                        if(t != null)
+                            t.shutdown();
+                    }
+                    socket.close();
+                    System.exit(0);
+                }
             }
+
         }
         catch(IOException e)
         {
             for(int i = 0; i < threads.length; i++)
                 if(threads[i] == this) {
+                    int user = i+1;
+                    System.out.println("User " + user + " has disconnected.");
                     threads[i] = null;
                 }
-            e.printStackTrace();
         }
+    }
+
+    public void shutdown()
+    {
+        try {
+            input.close();
+            output.close();
+        } catch(IOException e){};
     }
 
 }

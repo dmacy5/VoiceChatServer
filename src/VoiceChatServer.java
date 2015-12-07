@@ -8,12 +8,12 @@ public class VoiceChatServer{
 
     public static void main(String[] args){
         try {
-            ServerSocket listener = new ServerSocket(9999);
+            ServerSocket listener = new ServerSocket(8888);
+            System.out.println("Press any key to exit...");
 
             while (true) {
                 new ClientThread(listener.accept(), threads).start();
             }
-            //listener.close();
         }
         catch(IOException e){
         }
