@@ -14,11 +14,20 @@ public class VoiceChatServer{
             System.out.println("Press any key to exit...");
             listener.setSoTimeout(10);
 
+            boolean isFull;
+
             while (keepGoing) {
                 try {
-                    new ClientThread(listener.accept(), threads).start();
-                } catch(SocketTimeoutException e){
+                    isFull = true;
+                    for(int i = 0; i < threads.length; i++)
+                        if(threads[i] == null)
+                            isFull = false;
 
+                    if(!isFull)
+                        new ClientThread(listener.accept(), threads).start();
+
+                } catch(SocketTimeoutException e){
+                    //catches if connection isn't found each time
                 }
                 if(System.in.available() != 0) {
                     listener.close();
